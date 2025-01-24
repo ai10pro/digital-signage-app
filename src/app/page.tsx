@@ -11,16 +11,40 @@ const buttonStyles: {
     accessible: boolean;
   };
 } = {
-  ["サイネージ新規追加"]: {
-    color: "bg-red-500",
-    hoverColor: "hover:bg-red-600",
-    page: "/page1",
-    accessible: true,
-  },
   ["サイネージ一覧"]: {
     color: "bg-green-500",
     hoverColor: "hover:bg-green-600",
-    page: "/page2",
+    page: "/admin/contents",
+    accessible: true,
+  },
+  ["サイネージ新規追加"]: {
+    color: "bg-red-500",
+    hoverColor: "hover:bg-red-600",
+    page: "/admin/contents/new",
+    accessible: true,
+  },
+  ["コンテンツユーザー一覧"]: {
+    color: "bg-blue-500",
+    hoverColor: "hover:bg-blue-600",
+    page: "/admin/contentUser",
+    accessible: true,
+  },
+  ["コンテンツユーザー新規追加"]: {
+    color: "bg-yellow-500",
+    hoverColor: "hover:bg-yellow-600",
+    page: "/admin/contentUser/new",
+    accessible: true,
+  },
+  ["タグ新規追加"]: {
+    color: "bg-purple-500",
+    hoverColor: "hover:bg-purple-600",
+    page: "/admin/tags/new",
+    accessible: true,
+  },
+  ["タグ一覧"]: {
+    color: "bg-indigo-500",
+    hoverColor: "hover:bg-indigo-600",
+    page: "/admin/tags",
     accessible: true,
   },
 };
@@ -39,7 +63,7 @@ const Page: React.FC = () => {
   return (
     <main>
       <div className="text-2xl font-bold">Main</div>
-      <div className="justify-space-around space-x-5">
+      <div className="grid grid-cols-4 gap-4">
         {Object.entries(buttonStyles).map(
           ([name, { color, hoverColor, accessible }]) => (
             <PadButton
