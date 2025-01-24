@@ -113,7 +113,7 @@ const Page: React.FC = () => {
 
       {/* コンテンツ一覧表示 */}
       <div className="text-2xl font-bold mt-8">コンテンツ一覧表示</div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {contents.map((content) => (
           <ContentSummary key={content.id} content={content} />
         ))}

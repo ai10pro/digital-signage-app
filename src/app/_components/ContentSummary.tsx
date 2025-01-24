@@ -9,7 +9,7 @@ type Props = {
 
 const ContentSummary = ({ content }: Props) => {
   return (
-    <div>
+    <div className="w-full">
       <Image
         src={content.image.url}
         alt={content.title}
