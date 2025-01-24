@@ -1,7 +1,15 @@
 "use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import type { Content } from "@/app/_types/Content";
 
 import PadButton from "@/app/_components/PadButton";
-import { useRouter } from "next/navigation";
+import ContentSummary from "@/app/_components/ContentSummary";
+
+import dummyPosts from "./_mock/dummyContents";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const buttonStyles: {
   [key: string]: {
@@ -50,6 +58,8 @@ const buttonStyles: {
 };
 
 const Page: React.FC = () => {
+  const [contents, setContetns] = useState<Content[] | null>(null);
+
   const router = useRouter();
 
   const onClick = (name: string) => {
@@ -59,6 +69,28 @@ const Page: React.FC = () => {
       return;
     }
   };
+
+  useEffect(() => {
+    // 本来はウェブAPIを叩いてデータを取得するが、まずはモックデータを使用
+    // (ネットからのデータ取得をシミュレートして１秒後にデータをセットする)
+    const timer = setTimeout(() => {
+      console.log("ウェブAPIからデータを取得しました (虚言)");
+      setContetns(dummyPosts);
+    }, 1000); // 1000ミリ秒 = 1秒
+
+    // データ取得の途中でページ遷移したときにタイマーを解除する処理
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 投稿データが取得できるまでは「Loading...」を表示
+  if (!contents) {
+    return (
+      <div className="text-gray-500">
+        <FontAwesomeIcon icon={faSpinner} className="mr-1 animate-spin" />
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <main>
@@ -77,6 +109,14 @@ const Page: React.FC = () => {
             </PadButton>
           )
         )}
+      </div>
+
+      {/* コンテンツ一覧表示 */}
+      <div className="text-2xl font-bold mt-8">コンテンツ一覧表示</div>
+      <div className="grid grid-cols-3 gap-4">
+        {contents.map((content) => (
+          <ContentSummary key={content.id} content={content} />
+        ))}
       </div>
     </main>
   );

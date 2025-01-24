@@ -1,5 +1,5 @@
 export type ContentImage = {
   url: string;
-  with: number;
+  width: number;
   height: number;
 };

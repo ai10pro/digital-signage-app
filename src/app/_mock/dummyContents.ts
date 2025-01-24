@@ -10,7 +10,7 @@ const dummyPosts: Content[] = [
     },
     image: {
       url: "https://placehold.jp/1280x720.png",
-      with: 1280,
+      width: 1280,
       height: 720,
     },
     tags: [
@@ -34,7 +34,7 @@ const dummyPosts: Content[] = [
     },
     image: {
       url: "https://placehold.jp/1280x720.png",
-      with: 1280,
+      width: 1280,
       height: 720,
     },
     tags: [
