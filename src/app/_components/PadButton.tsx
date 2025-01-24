@@ -1,16 +1,33 @@
 "use client";
+import { access } from "fs";
 import { twMerge } from "tailwind-merge";
 
-const PadButton: React.FC = () => {
+interface PadButtonProps {
+  color: string;
+  onClick: () => void;
+  accessible: boolean;
+  children?: React.ReactNode;
+}
+
+const PadButton: React.FC<PadButtonProps> = ({
+  color,
+  onClick,
+  accessible,
+  children,
+}) => {
   return (
     <button
       className={twMerge(
-        "px-4 py-2",
-        "bg-blue-500 text-white",
-        "rounded-lg shadow-md"
+        "w-40 h-32",
+        "rounded-lg shadow-md",
+        "text-white",
+        accessible
+          ? twMerge("cursor-pointer", color || "bg-blue-500")
+          : twMerge("cursor-not-allowed", "bg-slate-500")
       )}
+      onClick={onClick}
     >
-      Button
+      {children}
     </button>
   );
 };
