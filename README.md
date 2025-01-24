@@ -1,4 +1,4 @@
-# digital-signage-app
+# Digital-Signage-app
 **ブラウザで動作するデジタルサイネージアプリ**
 
 ## 概要
