@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 interface PadButtonProps {
   color: string;
+  hoverColor: string;
   onClick: () => void;
   accessible: boolean;
   children?: React.ReactNode;
@@ -11,6 +12,7 @@ interface PadButtonProps {
 
 const PadButton: React.FC<PadButtonProps> = ({
   color,
+  hoverColor,
   onClick,
   accessible,
   children,
@@ -22,7 +24,11 @@ const PadButton: React.FC<PadButtonProps> = ({
         "rounded-lg shadow-md",
         "text-white",
         accessible
-          ? twMerge("cursor-pointer", color || "bg-blue-500")
+          ? twMerge(
+              "cursor-pointer",
+              color || "bg-blue-500",
+              hoverColor || "hover:bg-blue-600"
+            )
           : twMerge("cursor-not-allowed", "bg-slate-500")
       )}
       onClick={onClick}
