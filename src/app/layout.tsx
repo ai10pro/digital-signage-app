@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
+
 import Header from "@/app/_components/Header";
 
 export const metadata: Metadata = {
@@ -17,7 +22,7 @@ const RootLayout: React.FC<Props> = (props) => {
     <html lang="ja">
       <body>
         <Header />
-        <div>{children}</div>
+        <div className="mx-4 mt-2 max-w-2xl md:mx-auto">{children}</div>
       </body>
     </html>
   );
