@@ -8,4 +8,5 @@ export type Content = {
   user: ContentUser;
   image: ContentImage;
   tags: Tag[];
+  createdAt: string;
 };
