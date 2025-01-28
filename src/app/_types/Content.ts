@@ -7,6 +7,7 @@ export type Content = {
   title: string;
   user: ContentUser;
   image: ContentImage;
+  text: string;
   tags: Tag[];
   createdAt: string;
 };

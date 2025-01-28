@@ -18,6 +18,7 @@ const dummyPosts: Content[] = [
       width: 1280,
       height: 720,
     },
+    text: "本文1",
     tags: [
       {
         id: "tag-11111",
@@ -47,6 +48,7 @@ const dummyPosts: Content[] = [
       width: 1280,
       height: 720,
     },
+    text: "本文2",
     tags: [
       {
         id: "tag-33333",
