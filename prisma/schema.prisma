@@ -20,10 +20,10 @@ model Content {
   title          String
   text           String
   coverImageURL  String
-  user           ContentsUsers[]
+  users          ContentsUser[]
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  tag            ContentsTags[]
+  tags           ContentTags[]
 }
 
 // ユーザーテーブル
@@ -33,7 +33,7 @@ model User {
   userImageURL  String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  contents      ContentsUsers[]
+  contents      ContentsUser[]
 }
 
 // タグテーブル
@@ -42,11 +42,11 @@ model Tag {
   name      String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  contents  ContentsTags[]
+  contents  ContentTags[]
 }
 
 // コンテンツとユーザーを紐づける中間テーブル
-model ContentsUsers {
+model ContentsUser {
   id          String @id @default(uuid())
   contentId   String
   userId      String
@@ -57,7 +57,7 @@ model ContentsUsers {
 }
 
 // コンテンツとタグを紐づける中間テーブル
-model ContentsTags {
+model ContentTags {
   id          String @id @default(uuid())
   contentId   String
   tagId       String
