@@ -7,6 +7,11 @@ const dummyPosts: Content[] = [
     user: {
       id: "user-11111",
       name: "ユーザー1",
+      img: {
+        url: "https://placehold.jp/3d4070/ffffff/200x200.png?text=icon-img%0A200x200",
+        width: 200,
+        height: 200,
+      },
     },
     image: {
       url: "https://placehold.jp/1280x720.png",
@@ -31,6 +36,11 @@ const dummyPosts: Content[] = [
     user: {
       id: "user-22222",
       name: "ユーザー2",
+      img: {
+        url: "https://placehold.jp/2cba35/ffffff/200x200.png?text=icon-img%0A200x200",
+        width: 200,
+        height: 200,
+      },
     },
     image: {
       url: "https://placehold.jp/1280x720.png",

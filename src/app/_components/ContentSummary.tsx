@@ -17,6 +17,16 @@ const ContentSummary = ({ content }: Props) => {
         height={content.image.height}
       />
       <h2>{content.title}</h2>
+      <div className="flex space-x-3">
+        <Image
+          className="rounded-full"
+          src={content.user.img.url}
+          alt={content.user.name}
+          width={50}
+          height={50}
+        />
+        <p className="my-auto">{content.user.name}</p>
+      </div>
       <p>投稿者: {content.user.name}</p>
       <p>タグ: {content.tags.map((tag) => tag.name).join(", ")}</p>
       <p>投稿日: {new Date(content.createdAt).toLocaleDateString()}</p>
