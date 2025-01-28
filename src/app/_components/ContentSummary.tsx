@@ -9,7 +9,7 @@ type Props = {
 
 const ContentSummary = ({ content }: Props) => {
   return (
-    <div className="w-full">
+    <div className="my-2 max-w-xs">
       <Image
         src={content.image.url}
         alt={content.title}

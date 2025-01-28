@@ -20,7 +20,7 @@ const PadButton: React.FC<PadButtonProps> = ({
   return (
     <button
       className={twMerge(
-        "w-40 h-32",
+        "m-1 h-20 w-28 p-2 sm:h-32 sm:w-40",
         "rounded-lg shadow-md",
         "text-white",
         accessible

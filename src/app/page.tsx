@@ -95,7 +95,7 @@ const Page: React.FC = () => {
   return (
     <main>
       <div className="text-2xl font-bold">Main</div>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="mx-2 flex flex-wrap justify-start">
         {Object.entries(buttonStyles).map(
           ([name, { color, hoverColor, accessible }]) => (
             <PadButton
@@ -110,10 +110,9 @@ const Page: React.FC = () => {
           )
         )}
       </div>
-
       {/* コンテンツ一覧表示 */}
-      <div className="text-2xl font-bold mt-8">コンテンツ一覧表示</div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="mt-8 w-full text-2xl font-bold">コンテンツ一覧表示</div>
+      <div className="-mx-2 flex flex-wrap justify-around">
         {contents.map((content) => (
           <ContentSummary key={content.id} content={content} />
         ))}
