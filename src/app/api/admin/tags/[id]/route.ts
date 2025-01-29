@@ -9,6 +9,29 @@ type RouteParams = {
   };
 };
 
+type RequestBody = {
+  name: string;
+};
+
+// [PUT] /api/admin/tags/[id] タグの更新
+export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
+  try {
+    const id = routeParams.params.id;
+    const { name }: RequestBody = await req.json();
+    const tag: Tag = await prisma.tag.update({
+      where: { id },
+      data: { name },
+    });
+    return NextResponse.json(tag);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "タグの更新に失敗しました" },
+      { status: 500 }
+    );
+  }
+};
+
 // [DELETE] /api/admin/tags/[id] タグの削除
 export const DELETE = async (req: NextRequest, routeParams: RouteParams) => {
   try {
