@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client";
+
 import "./globals.css";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
@@ -6,11 +7,8 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import Header from "@/app/_components/Header";
-
-export const metadata: Metadata = {
-  title: "NextBlogApp",
-  description: "Built to learn Next.js and modern web development.",
-};
+import { usePathname } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 type Props = {
   children: React.ReactNode;
@@ -18,11 +16,21 @@ type Props = {
 
 const RootLayout: React.FC<Props> = (props) => {
   const { children } = props;
+  const pathname = usePathname();
+  const isPlayerPage = pathname.startsWith("/player");
+
   return (
     <html lang="ja">
       <body>
         <Header />
-        <div className="mx-4 mt-2 max-w-2xl md:mx-auto">{children}</div>
+        <div
+          className={twMerge(
+            "",
+            isPlayerPage ? "mx-auto w-full" : "mx-4 mt-2 max-w-2xl md:mx-auto"
+          )}
+        >
+          {children}
+        </div>
       </body>
     </html>
   );
