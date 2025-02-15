@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { Content } from "@/app/_types/Content";
+import type { ContentApiResponse } from "./_types/ContentApiResponse";
 
 import PadButton from "@/app/_components/PadButton";
 import ContentSummary from "@/app/_components/ContentSummary";
 
-import dummyPosts from "./_mock/dummyContents";
+import fetchContents from "./_components/FetchContents";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -58,7 +58,10 @@ const buttonStyles: {
 };
 
 const Page: React.FC = () => {
-  const [contents, setContetns] = useState<Content[] | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [contents, setContetns] = useState<ContentApiResponse[] | null>(null);
 
   const router = useRouter();
 
@@ -71,15 +74,8 @@ const Page: React.FC = () => {
   };
 
   useEffect(() => {
-    // 本来はウェブAPIを叩いてデータを取得するが、まずはモックデータを使用
-    // (ネットからのデータ取得をシミュレートして１秒後にデータをセットする)
-    const timer = setTimeout(() => {
-      console.log("ウェブAPIからデータを取得しました (虚言)");
-      setContetns(dummyPosts);
-    }, 1000); // 1000ミリ秒 = 1秒
-
-    // データ取得の途中でページ遷移したときにタイマーを解除する処理
-    return () => clearTimeout(timer);
+    console.log("FetchContents executed");
+    fetchContents(setContetns, setFetchError, setIsLoading);
   }, []);
 
   // 投稿データが取得できるまでは「Loading...」を表示

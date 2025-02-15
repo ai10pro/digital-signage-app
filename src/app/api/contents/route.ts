@@ -3,14 +3,30 @@ import { NextResponse, NextRequest } from "next/server";
 
 import { Content } from "@prisma/client";
 
+type RequestBody = {
+  title: string;
+  text: string;
+  coverImageURL: string;
+  userIds: string[];
+  tagIds: string[];
+};
+
 // [GET] /api/contents カテゴリ一覧の取得
 export const GET = async (req: NextRequest) => {
   try {
-    const contents: Content[] = await prisma.content.findMany({
-      orderBy: {
-        createdAt: "desc", // 降順 (新しい順)
+    // カテゴリの取得
+    const contents = await prisma.content.findMany({
+      select: {
+        id: true,
+        title: true,
+        text: true,
+        coverImageURL: true,
+        users: true,
+        tags: true,
+        createdAt: true,
       },
     });
+
     return NextResponse.json(contents);
   } catch (error) {
     console.error(error);

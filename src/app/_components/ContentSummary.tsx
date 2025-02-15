@@ -2,34 +2,40 @@
 
 import type { Content } from "@/app/_types/Content";
 import Image from "next/image";
+import { ContentApiResponse } from "../_types/ContentApiResponse";
 
 type Props = {
-  content: Content;
+  content: ContentApiResponse;
 };
 
 const ContentSummary = ({ content }: Props) => {
   return (
-    <div className="my-2 max-w-xs">
+    <div className="rounded-lg border border-gray-300 shadow-md">
       <Image
-        src={content.image.url}
+        src={content.coverImageURL}
         alt={content.title}
-        width={content.image.width}
-        height={content.image.height}
+        width={300}
+        height={200}
+        className="rounded-t-lg"
       />
-      <h2>{content.title}</h2>
-      <div className="flex space-x-3">
-        <Image
-          className="rounded-full"
-          src={content.user.img.url}
-          alt={content.user.name}
-          width={50}
-          height={50}
-        />
-        <p className="my-auto">{content.user.name}</p>
+      <div className="p-4">
+        <h2 className="text-xl font-bold">{content.title}</h2>
+        <p className="text-sm text-gray-500">{content.text}</p>
+        <div className="flex space-x-2">
+          {content.users.map((user) => (
+            <span key={user.id} className="text-xs">
+              {user.name}
+            </span>
+          ))}
+        </div>
+        <div className="flex space-x-2">
+          {content.tags.map((tag) => (
+            <span key={tag.id} className="text-xs">
+              {tag.name}
+            </span>
+          ))}
+        </div>
       </div>
-      <p>投稿者: {content.user.name}</p>
-      <p>タグ: {content.tags.map((tag) => tag.name).join(", ")}</p>
-      <p>投稿日: {new Date(content.createdAt).toLocaleDateString()}</p>
     </div>
   );
 };
