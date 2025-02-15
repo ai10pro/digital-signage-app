@@ -10,8 +10,8 @@ const Header: React.FC = () => {
   const isPlayerPage = pathname.startsWith("/player");
 
   return (
-    <header>
-      <div className="bg-slate-800 py-2">
+    <header className="">
+      <div className="flex h-[4vh] items-center bg-slate-800 py-2">
         <div
           className={twMerge(
             isPlayerPage ? "mx-auto w-full" : "mx-4 max-w-2xl md:mx-auto",

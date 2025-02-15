@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react";
 
 import ContentSummary from "@/app/_components/ContentSummary";
+import SignageContentView from "../_components/SignageContentView";
 import FetchContents from "@/app/_components/FetchContents";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -46,14 +47,21 @@ const Page: React.FC = () => {
   }
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center space-y-4">
-      <div className="text-2xl font-bold text-blue-500">コンテンツ一覧</div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {contents.map((content) => (
-          <ContentSummary key={content.id} content={content} />
-        ))}
-      </div>
-    </main>
+    <div className="flex flex-col overflow-hidden">
+      <main className="" style={{ height: "91vh" }}>
+        <SignageContentView contents={contents} />
+      </main>
+
+      {/* information */}
+      <footer className="flex h-[5vh] items-center bg-gray-800 p-4 text-2xl text-white">
+        <div className="">
+          <p className="my-auto">
+            This is a scrolling text example. Add your information here. This is
+            a scrolling text example. Add your information here.
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 };
 
