@@ -98,22 +98,6 @@ const Page: React.FC = () => {
 
   const router = useRouter();
 
-  const onClick = (name: string) => {
-    if (adminButtonStyles[name].accessible) {
-      router.push(adminButtonStyles[name].page);
-    } else {
-      return;
-    }
-  };
-
-  const playerOnClick = (name: string) => {
-    if (playerButtonStyles[name].accessible) {
-      router.push(playerButtonStyles[name].page);
-    } else {
-      return;
-    }
-  };
-
   useEffect(() => {
     console.log("FetchContents executed");
     fetchContents(setContetns, setFetchError, setIsLoading);
