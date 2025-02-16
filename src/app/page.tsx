@@ -11,7 +11,7 @@ import fetchContents from "./_components/FetchContents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const buttonStyles: {
+const adminButtonStyles: {
   [key: string]: {
     color: string;
     hoverColor: string;
@@ -57,6 +57,28 @@ const buttonStyles: {
   },
 };
 
+const playerButtonStyles: {
+  [key: string]: {
+    color: string;
+    hoverColor: string;
+    page: string;
+    accessible: boolean;
+  };
+} = {
+  ["サイネージ"]: {
+    color: "bg-green-500",
+    hoverColor: "hover:bg-green-600",
+    page: "/player",
+    accessible: true,
+  },
+  ["タグ一覧"]: {
+    color: "bg-indigo-500",
+    hoverColor: "hover:bg-indigo-600",
+    page: "/player/tags",
+    accessible: true,
+  },
+};
+
 const Page: React.FC = () => {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -66,8 +88,16 @@ const Page: React.FC = () => {
   const router = useRouter();
 
   const onClick = (name: string) => {
-    if (buttonStyles[name].accessible) {
-      router.push(buttonStyles[name].page);
+    if (adminButtonStyles[name].accessible) {
+      router.push(adminButtonStyles[name].page);
+    } else {
+      return;
+    }
+  };
+
+  const playerOnClick = (name: string) => {
+    if (playerButtonStyles[name].accessible) {
+      router.push(playerButtonStyles[name].page);
     } else {
       return;
     }
@@ -90,15 +120,31 @@ const Page: React.FC = () => {
 
   return (
     <main>
-      <div className="text-2xl font-bold">Main</div>
+      <div className="text-2xl font-bold">Admin</div>
       <div className="mx-2 flex flex-wrap justify-start">
-        {Object.entries(buttonStyles).map(
+        {Object.entries(adminButtonStyles).map(
           ([name, { color, hoverColor, accessible }]) => (
             <PadButton
               key={name}
               color={color}
               hoverColor={hoverColor}
               onClick={() => onClick(name)}
+              accessible={accessible}
+            >
+              {name}
+            </PadButton>
+          )
+        )}
+      </div>
+      <div className="text-2xl font-bold">Player</div>
+      <div className="mx-2 flex flex-wrap justify-start">
+        {Object.entries(playerButtonStyles).map(
+          ([name, { color, hoverColor, accessible }]) => (
+            <PadButton
+              key={name}
+              color={color}
+              hoverColor={hoverColor}
+              onClick={() => playerOnClick(name)}
               accessible={accessible}
             >
               {name}
