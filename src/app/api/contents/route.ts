@@ -1,15 +1,8 @@
+import { name } from "./../../../../node_modules/ci-info/index.d";
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
 import { Content } from "@prisma/client";
-
-type RequestBody = {
-  title: string;
-  text: string;
-  coverImageURL: string;
-  userIds: string[];
-  tagIds: string[];
-};
 
 // [GET] /api/contents カテゴリ一覧の取得
 export const GET = async (req: NextRequest) => {
@@ -21,12 +14,30 @@ export const GET = async (req: NextRequest) => {
         title: true,
         text: true,
         coverImageURL: true,
-        users: true,
-        tags: true,
+        users: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                userImageURL: true,
+              },
+            },
+          },
+        },
+        tags: {
+          select: {
+            tag: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         createdAt: true,
       },
     });
-
     return NextResponse.json(contents);
   } catch (error) {
     console.error(error);

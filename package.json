@@ -17,11 +17,16 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@prisma/client": "^6.2.1",
+    "@radix-ui/react-accordion": "^1.2.3",
     "@splidejs/react-splide": "^0.7.12",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
     "next": "14.2.23",
     "react": "^18",
     "react-dom": "^18",
-    "splide-nextjs": "^2.4.23"
+    "splide-nextjs": "^2.4.23",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",

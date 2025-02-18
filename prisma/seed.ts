@@ -41,7 +41,7 @@ async function main() {
     data: {
       title: "タイトル2",
       text: "本文2",
-      coverImageURL: "https://placehold.jp/1280x720.png",
+      coverImageURL: "https://placehold.jp/0d91d3/1280x720.png",
       users: { create: { userId: u2.id } },
       tags: {
         create: [{ tagId: t2.id }, { tagId: t3.id }],
@@ -53,7 +53,7 @@ async function main() {
     data: {
       title: "タイトル3",
       text: "本文3",
-      coverImageURL: "https://placehold.jp/1280x720.png",
+      coverImageURL: "https://placehold.jp/e3a131/1280x720.png",
       users: { create: { userId: u3.id } },
       tags: {
         create: [{ tagId: t1.id }, { tagId: t3.id }],

@@ -20,9 +20,18 @@ const fetchContents = async (
         id: content.id,
         title: content.title,
         text: content.text,
-        coverImageURL: content.coverImageURL,
-        users: content.users,
-        tags: content.tags,
+        image: {
+          url: content.image,
+        },
+        users: content.users.map((user) => ({
+          id: user.user.id,
+          name: user.user.name,
+          imageURL: user.user.userImageURL,
+        })),
+        tags: content.tags.map((tag) => ({
+          id: tag.tag.id,
+          name: tag.tag.name,
+        })),
         createdAt: content.createdAt,
       }))
     );
