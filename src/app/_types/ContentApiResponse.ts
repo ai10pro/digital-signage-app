@@ -1,7 +1,7 @@
 export type ContentApiResponse = {
   id: string;
   title: string;
-  image: string;
+  coverImageURL: string;
   text: string;
   users: {
     user: {

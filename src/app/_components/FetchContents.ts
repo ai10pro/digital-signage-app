@@ -21,7 +21,7 @@ const fetchContents = async (
         title: content.title,
         text: content.text,
         image: {
-          url: content.image,
+          url: content.coverImageURL,
         },
         users: content.users.map((user) => ({
           id: user.user.id,
@@ -35,6 +35,7 @@ const fetchContents = async (
         createdAt: content.createdAt,
       }))
     );
+    // console.log(contentsResponse);
   } catch (error) {
     const errorMsg =
       error instanceof Error

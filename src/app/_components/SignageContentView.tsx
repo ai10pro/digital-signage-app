@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import "@splidejs/react-splide/css";
 import Image from "next/image";
 import { ContentApiResponse } from "../_types/ContentApiResponse";
+import { Content } from "../_types/Content";
 
 // SplideとSplideSlideを動的インポートし、サーバーサイドレンダリングを無効にします
 const Splide = dynamic(
@@ -16,7 +17,7 @@ const SplideSlide = dynamic(
 );
 
 type Props = {
-  contents: ContentApiResponse[];
+  contents: Content[];
 };
 
 const SignageContentView = ({ contents }: Props) => {
@@ -39,12 +40,12 @@ const SignageContentView = ({ contents }: Props) => {
       >
         {contents.map((content) => (
           <SplideSlide key={content.id}>
-            <div className="flex h-full items-center justify-center">
+            <div className="relative flex h-full items-center justify-center">
               <Image
-                src={content.coverImageURL}
+                src={content.image.url}
                 alt={content.title}
-                layout="fill"
-                objectFit="contain"
+                fill
+                style={{ objectFit: "contain" }}
               />
             </div>
           </SplideSlide>

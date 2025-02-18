@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { ContentApiResponse } from "./_types/ContentApiResponse";
+import type { Content } from "./_types/Content";
 
 import PadButton from "@/app/_components/PadButton";
 import ContentSummary from "@/app/_components/ContentSummary";
@@ -94,15 +95,16 @@ const Page: React.FC = () => {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [contents, setContetns] = useState<ContentApiResponse[] | null>(null);
+  const [contents, setContents] = useState<Content[] | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
     console.log("FetchContents executed");
-    fetchContents(setContetns, setFetchError, setIsLoading);
+    fetchContents(setContents, setFetchError, setIsLoading);
   }, []);
 
+  console.log(contents);
   // 投稿データが取得できるまでは「Loading...」を表示
   if (!contents) {
     return (

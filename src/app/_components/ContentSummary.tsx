@@ -5,14 +5,15 @@ import Image from "next/image";
 import { ContentApiResponse } from "../_types/ContentApiResponse";
 
 type Props = {
-  content: ContentApiResponse;
+  content: Content;
 };
 
 const ContentSummary = ({ content }: Props) => {
+  console.log(content);
   return (
     <div className="rounded-lg border border-gray-300 shadow-md">
       <Image
-        src={content.coverImageURL}
+        src={content.image.url}
         alt={content.title}
         width={300}
         height={200}

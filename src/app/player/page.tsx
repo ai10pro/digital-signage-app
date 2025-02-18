@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import type { ContentApiResponse } from "@/app/_types/ContentApiResponse";
+import type { Content } from "@/app/_types/Content";
 
 const Page: React.FC = () => {
   // ローディング状態・送信状態・エラー状態のState
@@ -20,7 +21,7 @@ const Page: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // コンテンツ一覧のState
-  const [contents, setContents] = useState<ContentApiResponse[]>([]);
+  const [contents, setContents] = useState<Content[]>([]);
 
   useEffect(() => {
     FetchContents(setContents, setFetchError, setIsLoading);
