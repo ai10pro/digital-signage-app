@@ -3,12 +3,16 @@
 import type { Content } from "@/app/_types/Content";
 import Image from "next/image";
 
+import { useRouter } from "next/navigation";
+
 type Props = {
   content: Content;
 };
 
 const AdminContentSummary: React.FC<Props> = (props) => {
   const { content } = props;
+  const router = useRouter();
+
   return (
     <>
       <div className="my-2 flex h-1/6 justify-between rounded-lg border border-gray-300 py-2 shadow-md">
@@ -42,7 +46,17 @@ const AdminContentSummary: React.FC<Props> = (props) => {
             <div className="my-auto pl-2 text-xl">{content.users[0].name}</div>
           </div>
         </div>
-        <></>
+        <>
+          <button
+            className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+            onClick={() => router.push(`/admin/contents/${content.id}`)}
+          >
+            編集
+          </button>
+          <button className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700">
+            削除
+          </button>
+        </>
       </div>
     </>
   );
