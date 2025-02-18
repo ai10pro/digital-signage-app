@@ -8,9 +8,10 @@ export const GET = async (req: NextRequest) => {
   try {
     const tags: Tag[] = await prisma.tag.findMany({
       orderBy: {
-        createdAt: "desc", // 降順 (新しい順)
+        name: "asc", // 昇順 (A-Z)
       },
     });
+    // console.log(tags);
     return NextResponse.json(tags);
   } catch (error) {
     console.error(error);
