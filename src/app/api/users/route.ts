@@ -11,6 +11,7 @@ export const GET = async (req: NextRequest) => {
         createdAt: "desc", // 降順 (新しい順)
       },
     });
+    // console.log(users);
     return NextResponse.json(users);
   } catch (error) {
     console.error(error);
