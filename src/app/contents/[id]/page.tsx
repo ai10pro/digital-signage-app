@@ -54,13 +54,13 @@ const Page: React.FC = () => {
           <div className="my-auto mb-2 text-2xl font-bold">{content.title}</div>
           <div className="flex">
             <Image
-              src={content.user.img.url}
+              src={content.users[0].imageURL}
               alt="User Icon"
               width={40}
               height={40}
               className="rounded-full"
             />
-            <div className="my-auto ml-2">{content.user.name}</div>
+            <div className="my-auto ml-2">{content.users[0].name}</div>
           </div>
         </div>
         <div className="flex">

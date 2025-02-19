@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
+export const revalidate = 0;
+
 type RouterParams = {
   params: {
     id: string;

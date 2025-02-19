@@ -4,15 +4,13 @@ const dummyPosts: Content[] = [
   {
     id: "content-11111",
     title: "タイトル1",
-    user: {
-      id: "user-11111",
-      name: "ユーザー1",
-      img: {
-        url: "https://placehold.jp/3d4070/ffffff/200x200.png?text=icon-img%0A200x200",
-        width: 200,
-        height: 200,
+    users: [
+      {
+        id: "user-11111",
+        name: "ユーザー1",
+        imageURL: "https://placehold.jp/150x150.png",
       },
-    },
+    ],
     image: {
       url: "https://placehold.jp/1280x720.png",
       width: 1280,
@@ -34,15 +32,13 @@ const dummyPosts: Content[] = [
   {
     id: "content-22222",
     title: "タイトル2",
-    user: {
-      id: "user-22222",
-      name: "ユーザー2",
-      img: {
-        url: "https://placehold.jp/2cba35/ffffff/200x200.png?text=icon-img%0A200x200",
-        width: 200,
-        height: 200,
+    users: [
+      {
+        id: "user-22222",
+        name: "ユーザー2",
+        imageURL: "https://placehold.jp/150x150.png",
       },
-    },
+    ],
     image: {
       url: "https://placehold.jp/1280x720.png",
       width: 1280,
