@@ -32,7 +32,7 @@ const Page: React.FC = () => {
 
   const [tags, setTags] = useState<Tag[] | null>(null);
 
-  const fetchCategories = async () => {
+  const fetchTags = async () => {
     try {
       const requestUrl = "/api/tags";
       const response = await fetch(requestUrl, {
@@ -66,7 +66,7 @@ const Page: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchTags();
   }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -90,7 +90,7 @@ const Page: React.FC = () => {
       }
 
       setNewTagName("");
-      await fetchCategories();
+      await fetchTags();
     } catch (error) {
       const errorMsg =
         error instanceof Error
@@ -140,6 +140,7 @@ const Page: React.FC = () => {
           <label htmlFor="name" className="block font-bold">
             名前
           </label>
+          <div className="text-sm text-gray-500">{}</div>
           <input
             type="text"
             id="name"
@@ -198,7 +199,7 @@ const Page: React.FC = () => {
                   "border border-slate-400 text-slate-500"
                 )}
               >
-                <Link href={`/admin/categories/${tag.id}`}>{tag.name}</Link>
+                <Link href={`/admin/tags/${tag.id}`}>{tag.name}</Link>
               </div>
             ))}
           </div>
