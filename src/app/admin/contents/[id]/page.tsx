@@ -59,7 +59,7 @@ type ContentApiResponse = {
       name: string;
       imageURL: string;
     };
-  };
+  }[];
   tags: {
     tag: {
       id: string;
