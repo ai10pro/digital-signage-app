@@ -16,6 +16,8 @@ import {
 
 import type { User } from "@/app/_types/User";
 
+import { useAuth } from "@/app/_hooks/useAuth";
+
 type UserApiResponse = {
   id: number;
   name: string;
@@ -30,6 +32,7 @@ const Page: React.FC = () => {
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const route = useRouter();
+  const { token } = useAuth();
 
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserNameError, setNewUserNameError] = useState<string>("");
@@ -105,11 +108,16 @@ const Page: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      if (!token) {
+        window.alert("予期せぬ動作：トークンが取得できません。");
+        return;
+      }
       const requestUrl = "/api/admin/users";
       const res = await fetch(requestUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token, // ◀ 追加
         },
         body: JSON.stringify({
           name: newUserName,
