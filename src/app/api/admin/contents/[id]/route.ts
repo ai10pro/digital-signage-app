@@ -1,7 +1,5 @@
-import { ContentTags } from "./../../../../../../node_modules/.prisma/client/index.d";
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
-
 import { Content } from "@prisma/client";
 
 type RouteParams = {
@@ -18,25 +16,30 @@ type RequestBody = {
   tagIds: string[];
 };
 
-// [PUT] /api/admin/user/[id] ユーザーの更新
+// [PUT] /api/admin/contents/[id] コンテンツの更新
 export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
   try {
     const id = routeParams.params.id;
     const requestBody: RequestBody = await req.json();
+
     const { title, text, coverImageURL, userIds, tagIds } = requestBody;
 
-    const tags = await prisma.tag.findMany({
-      where: {
-        id: { in: tagIds },
-      },
-    });
-    if (tags.length !== tagIds.length) {
-      return NextResponse.json(
-        { error: "指定されたタグが存在しません" },
-        { status: 400 }
-      );
+    // タグの存在確認
+    if (tagIds.length > 0) {
+      const tags = await prisma.tag.findMany({
+        where: {
+          id: { in: tagIds },
+        },
+      });
+      if (tags.length !== tagIds.length) {
+        return NextResponse.json(
+          { error: "指定されたタグが存在しません" },
+          { status: 400 }
+        );
+      }
     }
 
+    // ユーザーの存在確認
     const users = await prisma.user.findMany({
       where: {
         id: { in: userIds },
@@ -62,6 +65,7 @@ export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
       },
     });
 
+    // contentテーブルの更新
     const content: Content = await prisma.content.update({
       where: { id },
       data: {
@@ -71,16 +75,17 @@ export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
       },
     });
 
-    // contentTags（中間テーブル）の作成
-    for (const tag of tags) {
+    // contentTags（中間テーブル）にレコードを追加
+    for (const tagId of tagIds) {
       await prisma.contentTags.create({
         data: {
           contentId: id,
-          tagId: tag.id,
+          tagId: tagId,
         },
       });
     }
-    // contentUsers（中間テーブル）の作成
+
+    // contentUsers（中間テーブル）にレコードを追加
     for (const user of users) {
       await prisma.contentsUser.create({
         data: {
@@ -94,13 +99,13 @@ export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "コンテンツの更新に失敗しました" },
+      { error: "コンテンツの更新に失敗しました" + error },
       { status: 500 }
     );
   }
 };
 
-// [DELETE] /api/admin/tags/[id] タグの削除
+// [DELETE] /api/admin/contents/[id] コンテンツの削除
 export const DELETE = async (req: NextRequest, routeParams: RouteParams) => {
   try {
     const id = routeParams.params.id;

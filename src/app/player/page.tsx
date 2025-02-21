@@ -15,6 +15,8 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import type { ContentApiResponse } from "@/app/_types/ContentApiResponse";
 import type { Content } from "@/app/_types/Content";
 
+import Marquee from "@/app/_components/Marquee";
+
 const Page: React.FC = () => {
   // ローディング状態・送信状態・エラー状態のState
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -55,11 +57,8 @@ const Page: React.FC = () => {
 
       {/* information */}
       <footer className="flex h-[5vh] items-center bg-gray-800 p-4 text-2xl text-white">
-        <div className="">
-          <p className="my-auto">
-            This is a scrolling text example. Add your information here. This is
-            a scrolling text example. Add your information here.
-          </p>
+        <div className="w-full">
+          <Marquee />
         </div>
       </footer>
     </div>

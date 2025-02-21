@@ -11,16 +11,20 @@ type RouteParams = {
 
 type RequestBody = {
   name: string;
+  userImageURL: string;
 };
 
 // [PUT] /api/admin/user/[id] ユーザーの更新
 export const PUT = async (req: NextRequest, routeParams: RouteParams) => {
   try {
     const id = routeParams.params.id;
-    const { name }: RequestBody = await req.json();
+    const { name, userImageURL }: RequestBody = await req.json();
     const user: User = await prisma.user.update({
       where: { id },
-      data: { name },
+      data: {
+        name,
+        userImageURL,
+      },
     });
     return NextResponse.json(user);
   } catch (error) {

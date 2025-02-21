@@ -8,7 +8,10 @@ import fetchUsers from "@/app/_components/FetchUsers";
 import fetchTags from "@/app/_components/FetchTags";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSpinner,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { twMerge } from "tailwind-merge";
 
 // タグをフェッチしたときのレスポンスのデータ型
@@ -56,7 +59,7 @@ type ContentApiResponse = {
       name: string;
       imageURL: string;
     };
-  };
+  }[];
   tags: {
     tag: {
       id: string;
@@ -77,6 +80,12 @@ const Page: React.FC = () => {
   const [newTitle, setNewTitle] = useState<string>("");
   const [newText, setNewText] = useState<string>("");
   const [newCoverImageURL, setNewCoverImageURL] = useState<string>("");
+
+  const [newTitleError, setNewTitleError] = useState<string | null>("");
+  const [newTextError, setNewTextError] = useState<string | null>("");
+  const [newCoverImageURLError, setNewCoverImageURLError] = useState<
+    string | null
+  >("");
 
   // const [content, setContent] = useState<RawApiContentResponse | null>(null);
   const [users, setUsers] = useState<RawApiUserResponse[] | null>(null);
@@ -208,15 +217,17 @@ const Page: React.FC = () => {
     );
 
     // ユーザーの選択状態を更新
-    const selectedUserIds: Set<string> = new Set(
-      Object.values(content.users).map((c) => c.id)
-    );
-    setCheckableUsers(
-      checkableUsers.map((user) => ({
-        ...user,
-        isSelected: selectedUserIds.has(user.id),
-      }))
-    );
+    if (content.users) {
+      const selectedUserIds = new Set(
+        content.users.map((user) => user.user.id)
+      );
+      setCheckableUsers(
+        checkableUsers.map((user) => ({
+          ...user,
+          isSelected: selectedUserIds.has(user.id),
+        }))
+      );
+    }
 
     setIsInitialized(true);
   }, [content, checkableTags, checkableUsers, isInitialized]);
@@ -243,17 +254,32 @@ const Page: React.FC = () => {
 
   const updateNewTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     // ☆ タイトルのバリテーション処理
-    setNewTitle(e.target.value);
+    const title = e.target.value;
+    setNewTitle(title);
+    setNewTitleError(
+      newTitle.length < 2 || newTitle.length > 32
+        ? "2文字以上32文字以内で入力してください。"
+        : ""
+    );
   };
 
   const updateNewText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // ☆ 本文のバリテーション処理
-    setNewText(e.target.value);
+    const text = e.target.value;
+    setNewText(text);
+    setNewTextError(newText.length < 2 ? "2文字以上入力してください。" : "");
   };
 
   const updateNewCoverImageURL = (e: React.ChangeEvent<HTMLInputElement>) => {
     // ☆ カバーイメージURLのバリテーション処理
-    setNewCoverImageURL(e.target.value);
+    const coverImageURL = e.target.value;
+    setNewCoverImageURL(coverImageURL);
+    setNewCoverImageURLError(
+      !newCoverImageURL.match(/^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/)
+        ? "有効なURLを入力してください。"
+        : ""
+    );
+    console.log(newCoverImageURLError);
   };
 
   // 送信処理
@@ -266,12 +292,12 @@ const Page: React.FC = () => {
         title: newTitle,
         text: newText,
         coverImageURL: newCoverImageURL,
-        users: checkableUsers
+        userIds: checkableUsers
           ? checkableUsers
               .filter((user) => user.isSelected)
               .map((user) => user.id)
           : [],
-        tags: checkableTags
+        tagIds: checkableTags
           ? checkableTags.filter((tag) => tag.isSelected).map((tag) => tag.id)
           : [],
       };
@@ -306,6 +332,32 @@ const Page: React.FC = () => {
     return <div>初期化中...</div>;
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm("本当に削除しますか？")) return;
+
+    try {
+      const requestUrl = `/api/admin/contents/${id}`;
+      const res = await fetch(requestUrl, {
+        method: "DELETE",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        throw new Error(`${res.status}: ${res.statusText}`);
+      }
+      setIsSubmitting(false);
+      router.push("/admin/contents");
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error
+          ? `コンテンツの削除に失敗しました: ${error.message}`
+          : `予期せぬエラーが発生しました ${error}`;
+      console.error(errorMsg);
+      window.alert(errorMsg);
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <main>
       <div className="mb-4 text-2xl font-bold">コンテンツの編集・削除</div>
@@ -337,6 +389,12 @@ const Page: React.FC = () => {
             placeholder="タイトルを記入してください"
             required
           />
+          {newTitleError && (
+            <div className="flex items-center space-x-1 text-sm font-bold text-red-500">
+              <FontAwesomeIcon icon={faTriangleExclamation} />
+              <span>{newTitleError}</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -352,6 +410,12 @@ const Page: React.FC = () => {
             placeholder="本文を記入してください"
             required
           />
+          {newTextError && (
+            <div className="flex items-center space-x-1 text-sm font-bold text-red-500">
+              <FontAwesomeIcon icon={faTriangleExclamation} />
+              <span>{newTextError}</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -368,6 +432,12 @@ const Page: React.FC = () => {
             placeholder="カバーイメージのURLを記入してください"
             required
           />
+          {newCoverImageURLError && (
+            <div className="flex items-center space-x-1 text-sm font-bold text-red-500">
+              <FontAwesomeIcon icon={faTriangleExclamation} />
+              <span>{newCoverImageURLError}</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -381,7 +451,8 @@ const Page: React.FC = () => {
                     name="users"
                     value={chUser.id}
                     className="rounded-md"
-                    onChange={() => {}}
+                    onChange={() => switchUserState(chUser.id)}
+                    checked={chUser.isSelected}
                   />
                   <span className="cursor-pointer">{chUser.name}</span>
                 </label>
@@ -395,15 +466,16 @@ const Page: React.FC = () => {
         <div className="space-y-1">
           <div className="font-bold">タグ</div>
           <div className="flex flex-wrap gap-x-3.5">
-            {tags ? (
-              tags.map((tag) => (
+            {checkableTags ? (
+              checkableTags.map((tag) => (
                 <label key={tag.id} className="flex space-x-1">
                   <input
                     type="checkbox"
                     name="tags"
                     value={tag.id}
                     className="rounded-md"
-                    onChange={() => {}}
+                    onChange={() => switchTagState(tag.id)}
+                    checked={tag.isSelected}
                   />
                   <span className="cursor-pointer">{tag.name}</span>
                 </label>
@@ -422,7 +494,11 @@ const Page: React.FC = () => {
               "bg-indigo-500 text-white hover:bg-indigo-600",
               "disabled:cursor-not-allowed"
             )}
-            disabled={isSubmitting}
+            disabled={
+              newTitleError !== "" ||
+              newTextError !== "" ||
+              newCoverImageURLError !== ""
+            }
           >
             記事を更新
           </button>
@@ -433,7 +509,7 @@ const Page: React.FC = () => {
               "rounded-md px-5 py-1 font-bold",
               "bg-red-500 text-white hover:bg-red-600"
             )}
-            // onClick={handleDelete}
+            onClick={handleDelete}
           >
             削除
           </button>

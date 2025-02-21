@@ -4,9 +4,21 @@ import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDesktop } from "@fortawesome/free-solid-svg-icons";
 
+import { supabase } from "@/utils/supabase";
+import { useAuth } from "@/app/_hooks/useAuth";
+import { useRouter } from "next/navigation";
+
 import { usePathname } from "next/navigation";
 
 const Header: React.FC = () => {
+  // ログイン・ログアウト処理
+  const router = useRouter();
+  const { isLoading, session } = useAuth();
+  const logout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
   const pathname = usePathname();
   const isPlayerPage = pathname.startsWith("/player");
 
@@ -26,7 +38,18 @@ const Header: React.FC = () => {
               Header
             </Link>
           </div>
-          {!isPlayerPage && <div className="text-sm text-gray-300">About</div>}
+          {/* {!isPlayerPage && <div className="text-sm text-gray-300">About</div>} */}
+          <div className="flex gap-x-6">
+            {/* ▼ 追加 */}
+            {!isLoading &&
+              (session ? (
+                <button onClick={logout}>Logout</button>
+              ) : (
+                <Link href="/login">Login</Link>
+              ))}
+            {/* ▲ 追加 */}
+            {!isPlayerPage && <Link href="/about">About</Link>}
+          </div>
         </div>
       </div>
     </header>

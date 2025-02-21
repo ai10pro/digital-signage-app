@@ -1,22 +1,13 @@
-// [admin]
-// コンテンツユーザー作成ページ
-// 機能: コンテンツユーザーの作成
-
 "use client";
+
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import Link from "next/link";
-import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSpinner,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import type { User } from "@/app/_types/User";
-
-import { useAuth } from "@/app/_hooks/useAuth";
+import Image from "next/image";
 
 type UserApiResponse = {
   id: number;
@@ -31,14 +22,15 @@ const Page: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const route = useRouter();
-  const { token } = useAuth();
+  const { id } = useParams();
+  const router = useRouter();
 
   const [newUserName, setNewUserName] = useState<string>("");
   const [newUserNameError, setNewUserNameError] = useState<string>("");
   const [newUserImageURL, setNewUserImageURL] = useState<string>("");
   const [newUserImageURLError, setNewUserImageURLError] = useState<string>("");
 
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
   const [users, setUsers] = useState<User[] | null>(null);
 
   const fetchUsers = async () => {
@@ -79,16 +71,30 @@ const Page: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const isValidUserName = (name: string) => {
+  useEffect(() => {
+    const currentUser = users?.find((c) => c.id === id);
+    if (currentUser !== undefined) {
+      setCurrentUser(currentUser);
+      setNewUserName(currentUser.name);
+      setNewUserImageURL(currentUser.imageURL);
+      setNewUserNameError("");
+      setNewUserImageURLError("");
+    }
+  }, [users, id]);
+
+  const isValidUserName = (name: string): string => {
     if (name.length < 2 || name.length > 16) {
       return "ユーザー名は2文字以上16文字以下で入力してください";
+    }
+    if (users && users.some((c) => c.name === name)) {
+      return "既に存在するユーザー名です";
     }
     return "";
   };
 
-  const updateNewUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewUserNameError(isValidUserName(event.target.value));
-    setNewUserName(event.target.value);
+  const updateNewUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewUserNameError(isValidUserName(e.target.value));
+    setNewUserName(e.target.value);
   };
 
   const isValidUserImageURL = (url: string): string => {
@@ -103,44 +109,36 @@ const Page: React.FC = () => {
     setNewUserImageURL(e.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      if (!token) {
-        window.alert("予期せぬ動作：トークンが取得できません。");
-        return;
-      }
-      const requestUrl = "/api/admin/users";
+      const requestUrl = `/api/admin/users/${id}`;
       const res = await fetch(requestUrl, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, // ◀ 追加
         },
         body: JSON.stringify({
           name: newUserName,
           userImageURL: newUserImageURL,
         }),
       });
-      console.log(res);
       if (!res.ok) {
-        const errorMsg = await res.text();
-        setNewUserNameError(errorMsg);
-        return;
+        throw new Error(`${res.status}: ${res.statusText}`);
       }
 
-      setNewUserName("");
-      setNewUserImageURL("");
+      setNewUserNameError("");
+      setNewUserImageURLError("");
       await fetchUsers();
-      route.push("/admin/contentUser");
+      router.push("/admin/contentUser");
     } catch (error) {
       const errorMsg =
         error instanceof Error
-          ? `"ユーザー作成に失敗しました": ${error.message}`
-          : "予期せぬエラーが発生しました";
-      console.error(errorMsg);
+          ? `ユーザーの更新に失敗しました: ${error.message}`
+          : `予期せぬエラーが発生しました ${error}`;
+      console.log(errorMsg);
       setFetchError(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -152,24 +150,58 @@ const Page: React.FC = () => {
       <div className="flex h-96 items-center justify-center">
         <FontAwesomeIcon
           icon={faSpinner}
-          className="animate-spin text-4xl text-gray-400"
+          className={twMerge("animate-spin text-4xl text-blue-500")}
         />
       </div>
     );
   }
 
   if (!users) {
-    return (
-      <div className="text-red-500">
-        <FontAwesomeIcon icon={faTriangleExclamation} className="mr-1" />
-        {fetchError}
-      </div>
-    );
+    return <div className="text-red-500">{fetchError}</div>;
   }
+
+  if (!users.some((c) => c.id === id)) {
+    return <div className="text-red-500">指定されたカテゴリが存在しません</div>;
+  }
+
+  const handleDeleteUser = async (userId: string) => {
+    if (isSubmitting) {
+      return;
+    }
+
+    if (!window.confirm("本当に削除しますか？")) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const requestUrl = `/api/admin/users/${userId}`;
+      const response = await fetch(requestUrl, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`${response.status}: ${response.statusText}`);
+      }
+
+      await fetchUsers();
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error
+          ? `"ユーザー削除に失敗しました": ${error.message}`
+          : "予期せぬエラーが発生しました";
+      alert(errorMsg);
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <main>
-      <div className="text-2xl font-bold">Admin コンテンツユーザー作成</div>
+      <div className="mb-4 text-2xl font-bold">ユーザーの編集・削除</div>
+
       {isSubmitting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="flex items-center rounded-lg bg-white px-8 py-4 shadow-lg">
@@ -188,7 +220,13 @@ const Page: React.FC = () => {
       >
         <div className="space-y-1">
           <label htmlFor="newTagName" className="block">
-            カテゴリ名
+            ユーザー名
+            {currentUser != undefined && (
+              <span className="text-sm text-gray-500">
+                {" "}
+                (現在の名前: {currentUser.name})
+              </span>
+            )}
           </label>
           <input
             id="newTagName"
@@ -200,23 +238,9 @@ const Page: React.FC = () => {
               newUserNameError ? "border-red-500" : "border-gray-300"
             )}
           />
-          {newUserNameError && (
-            <div className="flex items-center space-x-1 text-sm font-bold text-red-500">
-              <FontAwesomeIcon
-                icon={faTriangleExclamation}
-                className="text-sm"
-              />
-              {newUserNameError}
-            </div>
-          )}
         </div>
         <div className="flex min-w-full justify-around space-y-1">
-          <div
-            className={twMerge(
-              "flex size-36 items-center justify-center rounded-full border-2 border-gray-300",
-              newUserImageURLError ? "border-red-500" : "border-gray-300"
-            )}
-          >
+          <div>
             <Image
               src={newUserImageURL}
               alt={newUserName}
@@ -225,9 +249,15 @@ const Page: React.FC = () => {
               className="min-w-full rounded-full"
             />
           </div>
-          <div className="m-1 ml-3 w-full max-w-md">
+          <div className="m-1 ml-3 max-w-md">
             <label htmlFor="newUserImageURL" className="block">
               画像URL
+              {currentUser != undefined && (
+                <span className="text-sm text-gray-500">
+                  {" "}
+                  (現在のURL: {currentUser.imageURL})
+                </span>
+              )}
             </label>
             <input
               id="newUserImageURL"
@@ -241,17 +271,25 @@ const Page: React.FC = () => {
             />
           </div>
         </div>
-        <div className="flex justify-end space-x-4">
+        <div className="flex space-x-4">
           <button
             type="submit"
             className="rounded-md bg-blue-500 px-4 py-2 text-white"
             disabled={newUserNameError !== "" || newUserImageURLError !== ""}
           >
-            作成
+            更新
+          </button>
+          <button
+            type="button"
+            className="rounded-md bg-red-500 px-4 py-2 text-white"
+            onClick={() => currentUser?.id && handleDeleteUser(currentUser.id)}
+          >
+            削除
           </button>
         </div>
       </form>
     </main>
   );
 };
+
 export default Page;

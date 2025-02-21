@@ -13,6 +13,8 @@ import fetchContents from "./_components/FetchContents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+import { useGetCertification } from "@/app/_hooks/useRouteGuard";
+
 const adminButtonStyles: {
   [key: string]: {
     name: string;
@@ -99,6 +101,8 @@ const Page: React.FC = () => {
 
   const router = useRouter();
 
+  const { isAuthenticated } = useGetCertification();
+
   useEffect(() => {
     console.log("FetchContents executed");
     fetchContents(setContents, setFetchError, setIsLoading);
@@ -117,18 +121,23 @@ const Page: React.FC = () => {
 
   return (
     <main>
-      <div className="">
-        <PadButtonBox
-          boxName="Admin"
-          styles={Object.values(adminButtonStyles)}
-        />
-      </div>
-      <div className="">
-        <PadButtonBox
-          boxName="Player"
-          styles={Object.values(playerButtonStyles)}
-        />
-      </div>
+      {isAuthenticated && (
+        <div className="">
+          <PadButtonBox
+            boxName="Admin"
+            styles={Object.values(adminButtonStyles)}
+          />
+        </div>
+      )}
+
+      {isAuthenticated && (
+        <div className="">
+          <PadButtonBox
+            boxName="Player"
+            styles={Object.values(playerButtonStyles)}
+          />
+        </div>
+      )}
       {/* コンテンツ一覧表示 */}
       <div className="mt-8 w-full text-2xl font-bold">コンテンツ一覧表示</div>
       <div className="-mx-2 flex flex-wrap justify-around">

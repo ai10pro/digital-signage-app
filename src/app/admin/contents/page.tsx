@@ -55,7 +55,6 @@ const Page: React.FC = () => {
             <AdminContentsSummary key={content.id} content={content} />
           ))}
       </div>
-      <div className="">{JSON.stringify(contents)}</div>
     </main>
   );
 };

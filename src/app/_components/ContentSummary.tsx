@@ -11,7 +11,7 @@ type Props = {
 const ContentSummary = ({ content }: Props) => {
   console.log(content);
   return (
-    <div className="rounded-lg border border-gray-300 shadow-md">
+    <div className="m-2 rounded-lg border border-gray-300 shadow-md">
       <Image
         src={content.image.url}
         alt={content.title}
