@@ -165,7 +165,7 @@ const Page: React.FC = () => {
               </div>
               <div className="flex items-center space-x-4">
                 <Link
-                  href={`/admin/users/${user.id}`}
+                  href={`/admin/contentUser/${user.id}`}
                   className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
                 >
                   編集
