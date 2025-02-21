@@ -15,6 +15,8 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { useAuth } from "@/app/_hooks/useAuth";
+
 // タグをフェッチしたときのレスポンスのデータ型
 type RawApiTagResponse = {
   id: string;
@@ -45,6 +47,8 @@ type SelectableUser = {
 };
 
 const Page: React.FC = () => {
+  const { token } = useAuth(); // tokenの取得
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -132,6 +136,10 @@ const Page: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      if (!token) {
+        window.alert("予期せぬ動作：トークンが取得できません");
+        return;
+      }
       const requestBody = {
         title: newTitle,
         text: newText,
@@ -150,6 +158,7 @@ const Page: React.FC = () => {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token, // ◀ 追加
         },
         body: JSON.stringify(requestBody),
       });
