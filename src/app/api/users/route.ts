@@ -8,10 +8,10 @@ export const GET = async (req: NextRequest) => {
   try {
     const users: User[] = await prisma.user.findMany({
       orderBy: {
-        createdAt: "desc", // 降順 (新しい順)
+        createdAt: "asc",
       },
     });
-    // console.log(users);
+    console.log(users);
     return NextResponse.json(users);
   } catch (error) {
     console.error(error);
