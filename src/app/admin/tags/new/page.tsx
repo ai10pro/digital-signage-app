@@ -15,6 +15,8 @@ import {
 
 import type { Tag } from "@/app/_types/Tag";
 
+import { useAuth } from "@/app/_hooks/useAuth";
+
 type TagApiResponse = {
   id: number;
   name: string;
@@ -23,6 +25,9 @@ type TagApiResponse = {
 };
 
 const Page: React.FC = () => {
+  const router = useRouter();
+  const { token } = useAuth();
+
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -74,11 +79,16 @@ const Page: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      if (!token) {
+        window.alert("予期せぬ動作：トークンが取得できません。");
+        return;
+      }
       const requestUrl = "/api/admin/tags";
       const res = await fetch(requestUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token, // ◀ 追加
         },
         body: JSON.stringify({ name: newTagName }),
       });
@@ -91,6 +101,7 @@ const Page: React.FC = () => {
 
       setNewTagName("");
       await fetchTags();
+      router.push("/admin/tags");
     } catch (error) {
       const errorMsg =
         error instanceof Error
