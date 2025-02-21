@@ -73,6 +73,8 @@ const Page: React.FC = () => {
     const currentTag = tags?.find((c) => c.id === id);
     if (currentTag !== undefined) {
       setCurrentTag(currentTag.name);
+      setNewTagName(currentTag.name);
+      setNewTagNameError("");
     }
   }, [tags, id]);
 
@@ -111,6 +113,7 @@ const Page: React.FC = () => {
 
       setNewTagName("");
       await fetchTags(); // カテゴリ一覧を再取得
+      router.push("/admin/tags");
     } catch (error) {
       const errorMsg =
         error instanceof Error
@@ -166,6 +169,12 @@ const Page: React.FC = () => {
         <div className="space-y-1">
           <label htmlFor="newTagName" className="block">
             カテゴリ名
+            {currentTag !== undefined && (
+              <span className="text-sm text-gray-500">
+                {" "}
+                (現在の名前: {currentTag})
+              </span>
+            )}
           </label>
           <input
             id="newTagName"
