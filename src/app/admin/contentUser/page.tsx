@@ -138,7 +138,7 @@ const Page: React.FC = () => {
 
       <div className="mt-4 space-y-4">
         <Link
-          href="/admin/tags/new"
+          href="/admin/contentUser/new"
           className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
         >
           ユーザー新規作成

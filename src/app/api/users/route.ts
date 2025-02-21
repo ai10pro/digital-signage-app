@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest) => {
         createdAt: "asc",
       },
     });
-    console.log(users);
+    // console.log(users);
     return NextResponse.json(users);
   } catch (error) {
     console.error(error);

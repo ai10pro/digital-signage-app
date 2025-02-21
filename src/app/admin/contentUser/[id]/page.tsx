@@ -220,7 +220,7 @@ const Page: React.FC = () => {
       >
         <div className="space-y-1">
           <label htmlFor="newTagName" className="block">
-            カテゴリ名
+            ユーザー名
             {currentUser != undefined && (
               <span className="text-sm text-gray-500">
                 {" "}
