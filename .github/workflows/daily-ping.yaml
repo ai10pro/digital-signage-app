@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Send HTTP GET request
         run: |
-          curl -X GET "https://digital-signage-app-seven.vercel.app/" -v --fail || exit 1
+          curl -X GET "hhttps://digital-signage-app-seven.vercel.app/api/contents" -v --fail || exit 1
 
       - name: Log request time
         run: |
